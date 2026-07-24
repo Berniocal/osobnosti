@@ -27,3 +27,4 @@ jobs:
           git add -A
           git commit -m "Replace loader with standalone index.html"
           git push
+# trigger
