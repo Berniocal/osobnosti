@@ -1,0 +1,29 @@
+name: Unpack standalone index
+
+on:
+  push:
+    paths:
+      - '.github/workflows/unpack-index.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build standalone index.html
+        shell: bash
+        run: |
+          base64 --decode app.html.gz.b64 | gzip --decompress > index.html
+          rm -f app.html.gz.b64
+          rm -f .github/workflows/unpack-index.yml
+      - name: Commit standalone application
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Replace loader with standalone index.html"
+          git push
